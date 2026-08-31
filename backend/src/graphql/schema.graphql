@@ -1,0 +1,50 @@
+"""
+Strata Query App GraphQL schema.
+Canonical copy for frontend codegen. Kept in sync with src/graphql/typeDefs.ts.
+"""
+
+scalar AWSDateTime
+
+type Property {
+  id: ID!
+  address: String!
+  strataPlanNumber: String!
+  createdAt: AWSDateTime!
+}
+
+type Ticket {
+  id: ID!
+  propertyId: ID!
+  title: String!
+  description: String!
+  status: TicketStatus!
+  submittedBy: String!
+  response: String
+  respondedBy: String
+  createdAt: AWSDateTime!
+  respondedAt: AWSDateTime
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+}
+
+type Query {
+  listProperties: [Property!]!
+  getProperty(id: ID!): Property
+  listTickets(propertyId: ID, status: TicketStatus): [Ticket!]!
+  getTicket(id: ID!): Ticket
+}
+
+type Mutation {
+  createProperty(address: String!, strataPlanNumber: String!): Property!
+  updateProperty(id: ID!, address: String, strataPlanNumber: String): Property!
+  deleteProperty(id: ID!): Boolean!
+
+  submitTicket(propertyId: ID!, title: String!, description: String!, submittedBy: String!): Ticket!
+  respondToTicket(id: ID!, response: String!, respondedBy: String!): Ticket!
+  updateTicketStatus(id: ID!, status: TicketStatus!): Ticket!
+  deleteTicket(id: ID!): Boolean!
+}
